@@ -1,0 +1,67 @@
+---
+title: "08"
+author: "Arpan Sapkota"
+date: "2023-05-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## a
+```{r}
+library(ggplot2)
+AQ <- airquality
+ggplot(data = AQ, aes(x = Day, y = Temp)) +
+  geom_line() +
+  labs(x = "Day", y = "Temp", title = "Temperature vs. Day")
+
+#The plot shows the trend of temperature over time. We observe the pattern of temperature over the days, whether it increases or decreases.
+
+```
+
+
+## b
+```{r}
+AQ$Temp_class <- cut(AQ$Temp, breaks = seq(50, 100, by = 5))
+ggplot(data = AQ, aes(x = Temp_class)) +
+  geom_bar() +
+  labs(x = "Temperature Range", y = "Count", title = "Temperature Distribution")
+
+#The plot shows the count of temperature values that fall within each temperature range. We can observe the distribution of temperature values and the frequency of occurrence for each temperature range.
+```
+
+
+## c
+```{r}
+ggplot(data = AQ, aes(x = Temp)) +
+  geom_histogram(bins = 10, fill = "blue", alpha = 0.5) +
+  labs(x = "Temperature", y = "Count", title = "Temperature Distribution")
+
+
+#The plot shows the frequency of temperature values within each bin. We can compare this plot with the bar plot created above to observe the similarity or difference in the temperature distribution.
+```
+
+## d
+```{r}
+ggplot(data = AQ, aes(sample = Temp)) +
+  geom_qq() +
+  geom_abline() +
+  labs(x = "Theoretical Quantiles", y = "Sample Quantiles", title = "Normal Q-Q Plot of Temperature")
+
+
+#The plot shows the distribution of the temperature variable and whether it follows a normal distribution or not. We can interpret this plot to observe if the temperature variable is normally distributed. If the points follow a straight line, The distribution is approximately normal.
+
+```
+
+
+## e
+```{r}
+ggplot(data = AQ, aes(x = Wind, y = Temp)) +
+  geom_point() +
+  labs(x = "Wind", y = "Temp", title = "Scatter Plot of Temperature and Wind")
+
+#The plot shows the relationship between temperature and wind, whether they are positively correlated or not. The points are scattered randomly, there is no correlation between the variables.
+```
+

@@ -1,0 +1,76 @@
+---
+title: "Qno_06"
+author: "Arpan Sapkota"
+date: "2023-05-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## a
+```{r}
+#Defining integers from 1 to 15 in 3 approaches 
+I <- 1:15
+I <- seq(1, 15, by = 1)
+I <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+```
+
+## b 
+```{r}
+N <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+```
+
+## c
+```{r}
+add <- I + N
+add
+
+subtract <- I - N
+subtract
+
+multiply <- I * N
+multiply
+
+divide <- I / N
+divide
+
+#Adding I to N: the first element of the result is 2.1, which is obtained by adding 1 to 1.1. Similarly, the second element of the result is 4.2, which is obtained by adding 2 to 2.2, and so on.
+
+#Subtracting N from I: The first element of the result is -0.1, which is obtained by subtracting 1.1 from 1. Similarly, the second element of the result is -0.2, which is obtained by subtracting 2.2 from 2, and so on.
+
+#Multiplying I and N: the first element of the result is 1.1, which is obtained by multiplying 1 by 1.1. Similarly, the second element of the result is 4.84, which is obtained by multiplying 2 by 2.2, and so on.
+
+#Dividing I by N: the first element of the result is 0.9090909, which is obtained by dividing 1 by 1.1. Similarly, the second element of the result is 1.3636364, which is obtained by dividing 2 by 2.2, and so on.
+
+```
+
+
+## d Matrix multiplication 
+```{r}
+I <- 1:15
+N <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+
+
+#It is not possible to perform matrix multiplication between the vector I and the vector N because they have different lengths.
+
+#Matrix multiplication is only defined between matrices with compatible dimensions, which means that the number of columns in the first matrix must be equal to the number of rows in the second matrix.
+```
+
+## e Transpose I and N and Matrix Multiplication 
+```{r}
+I <- 1:15
+N <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+
+I <- matrix(I, nrow = 1)  
+N <- matrix(N, nrow = 5)  
+
+I_transposed <- t(I)  
+N_transposed <- t(N)  
+
+I_transposed %*% N_transposed
+
+#We have taken the dot product of the transpose of N and I. This is equivalent to multiplying each element of N with the corresponding element of I, summing the products, and returning a scalar value.
+
+```
+

@@ -1,0 +1,74 @@
+---
+title: "09"
+author: "Arpan Sapkota"
+date: "2023-05-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## a
+```{r}
+library(tidyverse)
+
+set.seed(07)
+df <- tibble(country = sample(c("China", "Nepal", "india"), 10, replace = TRUE),
+             year = sample(2000:2020, 10, replace = TRUE),
+             cases = sample(100:500, 10, replace = TRUE),
+             population = sample(100000:1000000, 10, replace = TRUE))
+df
+
+```
+
+
+
+## b
+```{r}
+df_long <- df %>% pivot_longer(cols = c("cases", "population"), names_to = "variable", values_to = "value")
+df_long
+
+#The long format has two columns - "variable" and "value". The "variable" column contains the variable names "cases" and "population", and the "value" column contains the corresponding values for each observation. It allows us to easily filter, group, and plot the data based on the variable of interest.
+
+```
+
+
+
+## c
+```{r}
+df_log <- df %>% mutate(log_cases = log(cases), log_population = log(population))
+df_log
+
+#The above code will create two new columns in the tibble that contain the log of cases and the log of population, respectively. We can interpret this transformation to be useful when the original variable has a wide range of values.
+```
+
+## d 
+```{r}
+df_scatter <- df %>% mutate(log_cases = log(cases), log_population = log(population))
+
+p1 <- ggplot(df_scatter, aes(x = cases, y = population)) + 
+  geom_point() + 
+  labs(x = "Cases", y = "Population") +
+  ggtitle("Cases vs Population")
+
+p2 <- ggplot(df_scatter, aes(x = log_cases, y = population)) + 
+  geom_point() + 
+  labs(x = "Log(Cases)", y = "Population") +
+  ggtitle("Log(Cases) vs Population")
+
+p3 <- ggplot(df_scatter, aes(x = cases, y = log_population)) + 
+  geom_point() + 
+  labs(x = "Cases", y = "Log(Population)") +
+  ggtitle("Cases vs Log(Population)")
+
+p4 <- ggplot(df_scatter, aes(x = log_cases, y = log_population)) + 
+  geom_point() + 
+  labs(x = "Log(Cases)", y = "Log(Population)") +
+  ggtitle("Log(Cases) vs Log(Population)")
+
+gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+
+#The first plot shows the relationship between cases and population, the second plot shows the relationship between the log of cases and population, the third plot shows the relationship between cases and the log of population, and the fourth plot shows the relationship
+```
+

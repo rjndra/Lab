@@ -1,0 +1,5 @@
+data <- c(1,2,3,4,5,6,7,8,9)
+text <- c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")
+matrix <- cbind(data, text)
+print(matrix)
+class(matrix)

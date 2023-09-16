@@ -1,0 +1,147 @@
+---
+title: "Untitled"
+author: "Rajendra Karki"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+...2080 re assesment
+
+1. Data Visualization with a focus on:
+
+a) Concept of grammar of graphics with Wilkinson's approach:
+The concept of grammar of graphics, proposed by Leland Wilkinson, provides a systematic and structured way to create data visualizations. It defines a set of building blocks that can be combined to construct complex plots. These building blocks include data, aesthetics (visual properties like color and size), geometric objects (points, lines, bars, etc.), statistical transformations (aggregations or summaries), and facets (subplots).
+
+b) Layers in grammar of graphics with ggplot approach and examples:
+In the ggplot2 package (an implementation of grammar of graphics in R), layers are used to add different components to a plot. Each layer represents a specific geometric object and associated aesthetic mappings. For example, you can add points, lines, and error bars on a scatter plot to create different layers.
+
+Example:
+R
+# Assuming you have installed the "ggplot2" package
+library(ggplot2)
+
+# Create a scatter plot with points and a regression line
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+e) Statistical transformations in grammar of graphics with examples:
+Statistical transformations in ggplot2 allow you to summarize or transform data before plotting. Examples include aggregating data using functions like mean or sum, binning continuous variables into intervals for creating histograms, or applying smooth functions for creating smoothed curves in scatter plots.
+
+Example:
+R
+# Create a histogram with count data
+ggplot(data = diamonds, aes(x = price)) +
+  geom_histogram()
+
+2. Supervised learning logistic regression model with a focus on:
+
+a) Pre-requisites before fitting this model:
+Before fitting a logistic regression model, it is important to ensure that the outcome variable is binary (0/1 or Yes/No). Additionally, check for linearity between the log-odds of the outcome and predictor variables, and consider the need for feature scaling if required.
+
+b) Multicollinearity and its importance in the multivariate logistic regression model:
+Multicollinearity refers to high correlation among predictor variables in the logistic regression model. It can lead to unstable coefficient estimates and make interpretation difficult. It is crucial to identify multicollinearity and consider techniques like regularization (e.g., L1 or L2 regularization) to address it.
+
+e) ROC curve and its importance in the multivariate logistic regression model:
+The Receiver Operating Characteristic (ROC) curve is a graphical representation of the trade-off between the true positive rate (sensitivity) and false positive rate (1-specificity) for different classification thresholds. It helps in evaluating the model's performance and finding the optimal threshold for binary classification tasks.
+
+3. Supervised learning classification regression model with a focus on:
+
+a) Model fit indices:
+Model fit indices in classification regression models evaluate how well the model fits the data. Common indices include accuracy, precision, recall, F1-score, and ROC-AUC (Area Under the Receiver Operating Characteristic curve). These metrics help in assessing the model's predictive power and performance.
+
+b) Confusion matrix with an example:
+A confusion matrix is a table that shows the performance of a classification model by comparing predicted and actual class labels. It includes metrics like true positive (TP), false positive (FP), true negative (TN), and false negative (FN). From the confusion matrix, various performance metrics can be calculated.
+
+Example:
+R
+# Assuming you have a fitted classification model 'model' and test data 'test_data'
+predictions <- predict(model, newdata = test_data)
+conf_matrix <- table(predictions, test_data$actual_class)
+
+e) Prediction accuracy with ROC curve:
+ROC curve and Area Under the ROC Curve (AUC-ROC) are used to measure the prediction accuracy of a classification model. The AUC-ROC value represents the model's ability to distinguish between the positive and negative classes, with higher values indicating better performance.
+
+4. Supervised learning support vector machine model with a focus on:
+
+a) Theory of this model:
+Support Vector Machine (SVM) is a powerful supervised learning algorithm used for classification and regression tasks. It aims to find the hyperplane that best separates the classes in the feature space. SVM can handle linear and non-linear separation using kernel functions.
+
+b) Model fit of this model with an example:
+R
+# Assuming you have installed the "e1071" package
+library(e1071)
+
+# Create an SVM model
+model <- svm(Species ~ ., data = iris, kernel = "linear")
+
+# Fit the model
+fit <- predict(model, newdata = iris)
+
+e) Results of this model for the example provided above:
+The results of the SVM model can be evaluated using metrics such as accuracy, precision, recall, and F1-score, and by visualizing the decision boundary for the classes.
+
+5. Supervised linear regression model with a focus on:
+
+a) Cross-validation:
+Cross-validation is a resampling technique used to assess the model's performance and generalization. It involves dividing the data into multiple subsets (folds), training the model on some subsets, and testing it on the remaining subsets. Common cross-validation methods include k-fold cross-validation and leave-one-out cross-validation.
+
+b) K-fold cross-validation:
+In k-fold cross-validation, the data is divided into k subsets (folds), and the model is trained and tested k times, with each fold serving as the test set once. The results are averaged to get a final performance metric.
+
+e) Repeated k-fold cross-validation:
+Repeated k-fold cross-validation involves repeating the k-fold cross-validation process multiple times with different random splits of the data. This helps in obtaining more stable and reliable performance estimates for the model.
+
+one line  solution
+
+Sure, here are one-line answers for each of your questions:
+
+1. R software: A statistical programming language for data analysis and visualization.
+
+2. Tab separated text file import in R: Use read.delim() or read.table() functions.
+
+3. Comma separated value text file import in R: Use read.csv() function.
+
+4. SPSS data file import in R: Use read_sav() function from the "haven" package.
+
+5. Integer and Numeric data types in R: Integer represents whole numbers, Numeric represents decimal numbers.
+
+6. Categorical and Factor data types in R: Both represent categorical variables, but Factor is used to explicitly specify categories.
+
+7. Date and Time data types in R: Date for dates without time, POSIXct for date and time.
+
+8. Arrays and Matrices in R: Arrays have multiple dimensions, Matrices have two dimensions.
+
+9. List and unlist in R: List stores elements of different data types, unlist converts a list back to a vector.
+
+10. Data frame and data table in R: Both are two-dimensional data structures, data.table is more efficient for large datasets.
+
+11. Base R code vs. pipe operator code: Pipe operator (%>%) from magrittr package simplifies code.
+
+12. For loop code vs. pipe operator code in R: Pipe operator can make code more readable and concise.
+
+13. "Tee" pipe operator (%T>%): Useful for debugging or printing intermediate results.
+
+14. "Exposition" pipe operator (%$%): Simplifies referencing variables on the right side.
+
+15. Package in R: A collection of functions, data, and documentation to extend R's capabilities.
+
+16. Package installation in R: Use install.packages("package_name") to install from CRAN.
+
+17. Package installation from GitHub in R: Use devtools::install_github("username/repo") to install from GitHub.
+
+18. Development of a package in R: Organize functions, data, and documentation following package structure.
+
+19. Compare Ordinary Least Square, Gradient Descent, and Maximum Likelihood in supervised learning: Methods for parameter estimation in regression models.
+
+20. Advantage of Validation and Cross-validation in supervised learning: Assess model performance and prevent overfitting.
+
+21. Log-transformed models, Polynomial models, and Neural network models in supervised learning: Different model types based on data characteristics.
+
+22. Supervised classification (decision tree) model using Bagging, Improved Bagging, and Boosting: Ensemble techniques to improve model performance.
+
+23. Social network analysis: Study of relationships between entities (nodes) and their attributes (links) in a network.
+
+24. Nodes and edges in social network analysis: Nodes are entities, edges are connections between nodes.
+
+25. Diameter and Edge density in social network analysis: Diameter is the longest shortest path, Edge density measures connectedness.

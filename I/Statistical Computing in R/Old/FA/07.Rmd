@@ -1,0 +1,47 @@
+---
+title: '07'
+author: "Arpan Sapkota"
+date: "2023-05-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## a
+```{r}
+data("airquality")
+AQ <- airquality
+```
+
+## b
+```{r}
+str(AQ)
+
+# Here Wind is a numeric variable and rest other are all the integer variable
+
+```
+
+## c 
+```{r}
+library(tidyr)
+
+AQ$Ozone <- as.double(AQ$Ozone)
+AQ$Ozone <- replace_na(AQ$Ozone, median(AQ$Ozone, na.rm = TRUE))
+
+
+```
+
+## d 
+```{r}
+AQ$Solar.R <- replace_na(AQ$Solar.R, median(AQ$Solar.R, na.rm = TRUE))
+AQ$Solar.R
+```
+
+## e
+```{r}
+AQ$Date <- as.Date(paste("2020", AQ$Month, AQ$Day, sep = "-"), format = "%Y-%m-%d")
+AQ$Date
+```
+

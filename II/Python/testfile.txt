@@ -1,0 +1,16 @@
+Chapter 5: File handling
+
+We will learn file handling in this Chapter.
+
+open() with two params filename and mode.
+modes:
+"r" : read
+"a": append
+"w": write
+"x" : create . Throws error is already exist.
+"+" : 
+In addition
+"t" : text mode
+"b" : binary mode
+
+This file is to opended with file handling.

@@ -1,0 +1,320 @@
+---
+title: "Rajendra Karki 25"
+author: "Rajendra Karki"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 6
+
+## a
+
+```{r }
+set.seed(25)
+age <- sample(18:90,100, replace = T)
+set.seed(25)
+sex <- as.factor(sample(c("male","femlae"),100, replace = T))
+set.seed(25)
+education <- as.factor(sample(c("No Education","Primary","Secondary","Beyond secondary")))
+set.seed(25)
+socio_economic_Status <- as.factor(sample(c("Low","Middle","High"), 100, replace = T))
+set.seed(25)
+BMI <- sample(14:38,100, replace = T)
+
+dataset <- data.frame(age,sex,education,socio_economic_Status,BMI)
+```
+
+## b
+
+```{r }
+library(ggplot2)
+ggplot(data = dataset, aes(x = age)) +
+  geom_line(stat = "density", color = "red") +
+  labs(x = "Age", y = "Density") +
+  ggtitle("Density Plot of Age")
+```
+
+## c
+
+```{r }
+ggplot(data = dataset, aes(x = age, y = BMI)) +
+  geom_point(color = "green") +
+  labs(x = "Age", y = "Body Mass Index") +
+  ggtitle("Scatter Plot of Age vs BMI")
+```
+
+## d
+
+```{r }
+dataset$BMI_Class <- cut(dataset$BMI, breaks = c(0, 18, 24, 30, Inf), labels = c("<18", "18-24", "25-30", "30+"))
+
+
+bmi_counts <- table(dataset$BMI_Class)
+
+
+bmi_counts_df <- data.frame(BMI_Class = names(bmi_counts), Count = bmi_counts)
+
+
+ggplot(data = bmi_counts_df, aes(x = "", y = bmi_counts, fill = BMI_Class)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  labs(fill = "BMI Class") +
+  ggtitle("Pie Chart of Body Mass Index Classes")
+```
+
+## e
+
+```{r }
+# Create age classes
+dataset$Age_Class <- cut(dataset$age, breaks = c(0, 15, 59, Inf), labels = c("<15", "15-59", "30+"))
+
+
+age_counts <- table(dataset$Age_Class)
+
+
+ggplot(data = data.frame(Age_Class = names(age_counts), Count = as.numeric(age_counts)), aes(x = Age_Class, y = Count)) +
+  geom_bar(stat = "Identity", fill = "red") +
+  labs(x = "Age Class", y = "Count") +
+  ggtitle("Bar Diagram of Age Class")
+```
+
+# 7
+
+## a
+
+```{r }
+library(carData)
+Bfoxdata <- Bfox
+```
+
+```{r }
+set.seed(25)
+ind <- sample(2, nrow(Bfoxdata), replace = T, prob = c(0.7,0.3))
+train <- Bfoxdata[ind==1,]
+test <- Bfoxdata[ind==2,]
+```
+
+## b
+
+```{r }
+#Supervised Linear Regression
+slr = lm(debt~.,data = Bfox)
+
+#Supervised Linear Regression
+library(caret)
+
+Bfox_test_temp <- test[,1:4]
+x_Bfox_test <- cbind(Bfox_test_temp,test[,6])
+x_Box.test <- scale(x_Bfox_test)[,]
+y_Box.test <- test[,5]
+
+Bfox_train_temp <- train[,1:4]
+x_Bfox_train <- cbind(Bfox_train_temp,train[,6])
+x_Box.train <- scale(x_Bfox_train)[,]
+y_Box.train <- train[,5]
+
+knn = knnreg(x_Box.train,y_Box.train)
+```
+
+## c
+
+```{r }
+summary(slr)
+summary(knn)
+str(knn)
+```
+
+### Interpret:
+
+##### Using Supervised Linear Regression:
+
+variables `partic`, `menwage` and `parttime` are significant for model generation. with residual error 5.754 R-squared: 0.9929 where overall pvalue is signification with value 2.2e-16
+
+##### Using Knn
+
+By default we use k = 5 as per str of `knn` model
+
+## d
+
+```{r }
+#predict using linear regression
+linear_pred <- predict(slr, newdata = test)
+knn_pred <- predict(knn, newdata = x_Bfox_test)
+```
+
+## e
+
+```{r }
+library(MLmetrics)
+
+linear_r2 <- R2_Score(test$debt, linear_pred)
+linear_mse <- MSE(test$debt, linear_pred)
+linear_rmse <- RMSE(test$debt, linear_pred)
+
+knn_r2 <- R2_Score(x_Bfox_test, knn_pred)
+knn_mse <- MSE(x_Bfox_test, knn_pred)
+knn_rmse <- RMSE(x_Bfox_test, knn_pred)
+
+# Printing the fit indices
+cat("\nLinear Regression Model:\n")
+cat("R-square: ", linear_r2, "\n")
+cat("Mean Squared Error (MSE): ", linear_mse, "\n")
+cat("Root Mean Squared Error (RMSE): ", linear_rmse, "\n\n")
+
+cat("KNN Regression Model:\n")
+cat("R-square: ", knn_r2, "\n")
+cat("Mean Squared Error (MSE): ", knn_mse, "\n")
+cat("Root Mean Squared Error (RMSE): ", knn_rmse, "\n")
+```
+
+# 8
+
+## a
+
+```{r }
+set.seed(25)
+ind <- sample(2,nrow(Arrests), replace = T, prob = c(0.8,0.2))
+mtcars_train <- Arrests[ind==1,]
+mtcars_test <- Arrests[ind==2,]
+str(Arrests)
+```
+
+## b
+
+```{r }
+lm_mtcars <- lm(released ~ .,data = Arrests)
+```
+
+# 9
+
+```{r }
+library(dplyr)
+data("mtcars")
+head(mtcars)
+```
+
+## a.
+
+```{r }
+#Normalize the data i.e scale and fitting in PCA
+car_scale <- scale(mtcars)
+```
+
+## b
+
+```{r }
+pca.1 <- prcomp(car_scale)
+summary(pca.1)
+
+eigenvalues <- pca.1$sdev^2
+eigenvalues
+```
+
+## c.
+
+```{r }
+plot(1:length(eigenvalues), eigenvalues, type = "b", 
+     xlab = "Principal Component", ylab = "Eigenvalue", 
+     main = "Scree Plot")
+abline(h=1,col ="red")
+```
+
+Only 2 components eigen values is greater than 1 . We use first 2 component
+
+## d.
+
+```{r }
+library(psych)
+fa.1 <- psych::principal(car_scale,nfactors = 3, rotate = "none")
+biplot(fa.1,labels=rownames(car_scale))
+```
+
+## e
+
+```{r }
+fa.2 <- psych::principal(car_scale,nfactors = 3, rotate = "varimax")
+fa.2
+summary(fa.2)
+```
+
+# 10
+
+## a
+
+```{r }
+data("USArrests")
+
+# a. Fit a k-means clustering model with k=2
+set.seed(25)
+k2 <- kmeans(USArrests, centers = 2)
+
+# Fit a k-means clustering model with k=3
+set.seed(25)
+k3 <- kmeans(USArrests, centers = 3)
+
+```
+
+## b.
+
+```{r }
+k2_cluster_means <- k2$centers
+k2_cluster_means
+
+k2_within_ss <- k2$tot.withinss
+k2_within_ss
+
+
+# Get cluster means and within sum of square values for k=3
+k3_cluster_means <- k3$centers
+k3_cluster_means
+
+k3_within_ss <- k3$tot.withinss
+k3_within_ss
+```
+
+#Interpretation: The cluster means represent the average values of the variables within each cluster and within sum of square value indicates the sum of squared distance between the observations and their assigned cluster centre.
+
+## c.
+
+```{r }
+plot(USArrests, col = k2$cluster, main = "Clustering (k=2)")
+points(k2$centers, col = 1:2, pch = 8, cex = 2)
+
+# Plot the clusters formed by k=3
+plot(USArrests, col = k3$cluster, main = "Clustering (k=3)")
+points(k3$centers, col = 1:3, pch = 8, cex = 2)
+```
+
+# Interpretation:
+
+The visualization of clusters for k=3 allows for interpretation of the distinct groupings and separations in the data.
+
+
+str(mtcars)
+#distance calculation
+state.disimilarity <- dist(mtcars)
+
+# Clustering
+# a
+hirar.1 <- hclust(state.disimilarity, method='single')
+plot(hirar.1, labels=rownames(mtcars), ylab="Distance")
+#b
+hirar.2 <- hclust(state.disimilarity, method='complete')
+plot(hirar.2, labels=rownames(mtcars), ylab="Distance")
+#c
+hirar.3 <- hclust(state.disimilarity, method='average')
+plot(hirar.3, labels=rownames(mtcars), ylab="Distance")
+
+#d
+abline(h=150, col='red')
+abline(h=200, col='blue')
+abline(h=100, col='green')
+abline(h=50, col='lightgreen')
+
+#e
+# 150 ma 4 cluster le sabai data include garcha
+# 50 ko line le 8 ota cluster dincha with two missing group

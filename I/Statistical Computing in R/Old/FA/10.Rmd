@@ -1,0 +1,55 @@
+---
+title: '10'
+author: "Arpan Sapkota"
+date: "2023-05-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## a
+```{r, warning=FALSE}
+library(igraph)
+g <- graph(edges = c(1,2))
+
+```
+
+## b
+```{r}
+plot(g)
+#The above command will plot a graph with two nodes and one edge between them. Node 1 is connected to node 2.
+
+```
+
+## c
+```{r}
+g1 <- graph(c("R", "S", "S", "T", "T", "R", "R", "T", "U", "S"))
+```
+
+
+## d
+```{r}
+plot(g1, vertex.color = "green", vertex.size = 30, edge.color = "red", edge.size = 5)
+#The above command will plot a graph with five nodes (R, S, T, U) and six edges connecting them.
+```
+
+## e
+```{r}
+# Degree
+degree(g1)
+
+# Closeness
+closeness(g1)
+
+# Betweenness
+betweenness(g1)
+
+#The degree of a node is the number of edges connected to it, Here R S and T have the same degree as 3 and U has the lowest degree. 
+
+#The closeness centrality of a node is the reciprocal of the sum of the shortest path distances from the node to all other nodes in the graph, Here R has high clonesess than S, T and U. 
+
+#The betweenness centrality of a node is the number of shortest paths that pass through the node. ere S and T has high betweenness.
+```
+

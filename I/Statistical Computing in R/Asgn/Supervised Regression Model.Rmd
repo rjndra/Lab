@@ -1,0 +1,189 @@
+---
+title: "Supervised Regression Model"
+author: "Arpan Sapkota"
+date: "2023-06-11"
+output: html_document
+---
+<h1>
+Course: MDS 503 (Statistical Computing with R)
+
+Student: Arpan Sapkota (07)
+
+Teacher: Shital Bhandary (Associate Professor)
+
+School: School of Mathematical Sciences, IOST, TU
+</h1>
+
+## 1. Download the Individual recode file from: https://dhsprogram.com/data/Download-Model-Datasets.cfm
+
+```{r }
+
+setwd("/Users/arpan/Desktop/MDS/01 MDS I-I/MDS 503 - Statistical Computing with R/Lab/Data")
+
+library(haven)
+data <- read_sav("ZZIR62FL.SAV")
+head(data)
+
+
+```
+
+
+## 2. Read it in R Studio and split it into training (80%) and testing (20%) datasets with set.seed as your class roll number
+```{r}
+set.seed(07)
+# Split into training and testing datasets
+library(caret)
+#trainIndex <- createDataPartition(data$V201, p = 0.8, list = FALSE)
+train_indices <- sample(nrow(data), floor(0.8 * nrow(data)))
+train_data <- data[train_indices, ]
+test_data <- data[-train_indices, ]
+```
+
+## 3. Fit a supervised regression model on the training data with Total Children Ever Born (V201) as dependent variable and age group (V013), region (V024), type of place of residence (V025), highest education level (V106) and wealth index (V190) as independent variables and interpret the result carefully, check VIF too and do the needful statistically if required 
+
+## Test of Normality
+```{r}
+#Test of Normality
+# Histogram
+hist(train_data$V201, breaks = 20, col = "lightblue", main = "Histogram of V201")
+
+# Q-Q plot
+qqnorm(train_data$V201)
+qqline(train_data$V201)
+
+```
+Skewed histogram for the dependent variable V201, it indicates that the distribution is not symmetric and deviates from a normal distribution. 
+
+In the context of linear regression, a skewed dependent variable can affect the assumptions of the model, such as the assumption of normality of residuals. It is generally desirable to have the dependent variable and residuals follow a normal distribution for accurate and reliable regression results.
+
+In this cases, it may be beneficial to consider transforming the dependent variable to achieve a more symmetrical distribution. transformations like taking the logarithm, square root, or reciprocal of the variable. 
+
+## Apply logarithm transformation
+
+```{r}
+# Apply logarithm transformation to V201
+train_data$log_V201 <- log(train_data$V201)
+
+# Histogram of log_V201
+hist(train_data$log_V201, breaks = 20, col = "lightblue", main = "Histogram of log_V201")
+
+ # Check for missing values
+any(is.na(train_data$log_V201))
+
+# Check for infinite values
+any(is.infinite(train_data$log_V201))
+
+# Replace infinite values with the maximum finite value
+train_data$log_V201[is.infinite(train_data$log_V201)] <- max(train_data$log_V201, na.rm = TRUE)
+
+# Q-Q plot of log_V201
+qqnorm(train_data$log_V201)
+qqline(train_data$log_V201)
+
+
+```
+
+
+## Apply square root transformation
+```{r}
+# Apply square root transformation to V201
+train_data$sqrt_V201 <- sqrt(train_data$V201)
+
+# Histogram of sqrt_V201
+hist(train_data$sqrt_V201, breaks = 20, col = "lightblue", main = "Histogram of sqrt_V201")
+```
+
+Above transformation also give the skewed histogram, So the dependent variable is not normally 
+distributed, So we can not use the linear model in this case.
+
+So Using Generalized Linear Models (GLMs):
+GLMs are an extension of linear regression that can handle non-normal dependent variables or non-linear relationships. They are suitable when the dependent variable follows a non-normal distribution or when the relationship between the dependent variable and independent variables is not linear. Examples of GLMs include logistic regression for binary outcomes and Poisson regression for count data.
+
+
+```{r}
+library(caret)
+
+# Fit a GLM on the training data
+model <- glm(V201 ~ V013 + V024 + V025 + V106 + V190, data = train_data, family = gaussian)
+
+# Print the summary of the model
+summary(model)
+
+# Check VIF
+library(car)
+vif(model)  # Check for multicollinearity
+```
+The independent variables V013, V025, V106, and V190 have significant coefficients (p < 0.001), indicating their strong relationship with the dependent variable V201.
+The intercept and V024 are not statistically significant.
+The model has a reasonably good fit, as indicated by the residual deviance and AIC values.
+The dispersion parameter for the gaussian family is 2.752417.
+
+## 4. Get the R-square and RMSE of this fitted model on training data using caret package
+```{r}
+# Predict on the training data
+predictions_train <- predict(model, newdata = train_data)
+
+# Calculate R-square on the training data
+rsquare_train <- caret::R2(predictions_train, train_data$V201)
+rsquare_train
+
+# Calculate RMSE on the training data
+rmse_train <- caret::RMSE(predictions_train, train_data$V201)
+rmse_train
+
+```
+- Model has an R-squared value of 0.6209, which means that approximately 62.09% of the variability in the dependent variable (Total Children Ever Born) is explained by the independent variables (age group, region, type of place of residence, highest education level, and wealth index) included in the model. This indicates a moderate level of explanatory power.
+
+- The root mean squared error (RMSE) value of 1.658 means that, on average, the predicted values from the model deviate from the actual values by approximately 1.658 units. 
+Lower RMSE values indicate a better fit, so this value could be considered moderate in terms of prediction accuracy.
+
+
+## 5. Predict the dependent variable on the test data and get the R-square and RMSE using caret package
+```{r}
+# Predict on the test data
+predictions_test <- predict(model, newdata = test_data)
+
+# Calculate R-square on the test data
+rsquare_test <- caret::R2(predictions_test, test_data$V201)
+rsquare_test
+
+# Calculate RMSE on the test data
+rmse_test <- caret::RMSE(predictions_test, test_data$V201)
+rmse_test
+
+```
+
+## 6. Tune the R-square and RMSE values of the testing model using LOOCV, k-fold cross validation and k-fold cross-validation with repeated samples using caret package
+```{r}
+# LOOCV
+loocv <- trainControl(method = "LOOCV")
+model_loocv <- train(V201 ~ V013 + V024 + V025 + V106 + V190, data = train_data, method = "glm", trControl = loocv, family = gaussian)
+rsquare_loocv <- model_loocv$results$Rsquared
+rmse_loocv <- model_loocv$results$RMSE
+
+# k-fold cross-validation
+kfold <- trainControl(method = "cv", number = 5)
+model_kfold <- train(V201 ~ V013 + V024 + V025 + V106 + V190, data = train_data, method = "glm", trControl = kfold, family = gaussian)
+rsquare_kfold <- model_kfold$results$Rsquared
+rmse_kfold <- model_kfold$results$RMSE
+
+# Repeated k-fold cross-validation
+repeated_kfold <- trainControl(method = "repeatedcv", number = 5, repeats = 3)
+model_repeated_kfold <- train(V201 ~ V013 + V024 + V025 + V106 + V190, data = train_data, method = "glm", trControl = repeated_kfold, family = gaussian)
+rsquare_repeated_kfold <- model_repeated_kfold$results$Rsquared
+rmse_repeated_kfold <- model_repeated_kfold$results$RMSE
+
+```
+
+
+## 7. Compare the R-square and RMSE of all the model and choose the one for final prediction
+```{r}
+results <- data.frame(Method = c("Training","Testing", "LOOCV", "k-fold CV", "Repeated k-fold CV"),
+                      R_Square = c(rsquare_train, rsquare_test, rsquare_loocv, rsquare_kfold, rsquare_repeated_kfold),
+                      RMSE = c(rmse_train, rmse_test, rmse_loocv, rmse_kfold, rmse_repeated_kfold))
+
+results
+
+```
+
+The differences in R-squared and RMSE among all the methods are quite small. Therefore, any of these methods can be considered for the final prediction. However, based on the slightly higher R-squared and slightly lower RMSE, the k-fold CV method may be preferred.
